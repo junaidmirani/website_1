@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zaiqa Restaurant — Mirpur Mathelo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0d0a07;
+      --bg2: #130f0a;
+      --gold: #c9963b;
+      --gold-light: #e8b96a;
+      --cream: #f5ead8;
+      --cream-dim: #c4b49a;
+      --red: #8b2020;
+      --white: #fdf8f0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999; opacity: .5;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 6vw;
+      background: linear-gradient(to bottom, rgba(13,10,7,.95) 0%, transparent 100%);
+      backdrop-filter: blur(2px);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 600;
+      color: var(--gold);
+      letter-spacing: .05em;
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      font-size: .78rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--cream-dim); text-decoration: none;
+      transition: color .3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-cta {
+      font-size: .75rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--bg); background: var(--gold);
+      padding: .55rem 1.4rem; border: none; cursor: pointer;
+      text-decoration: none;
+      transition: background .3s, transform .2s;
+      display: inline-block;
+    }
+    .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 24px; height: 1.5px; background: var(--cream); transition: .3s; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      padding: 0 8vw;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 80% at 70% 50%, rgba(139,32,32,.18) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 70% at 20% 80%, rgba(201,150,59,.08) 0%, transparent 55%),
+        linear-gradient(160deg, #130f0a 0%, #0d0a07 100%);
+    }
+
+    .hero-ornament {
+      position: absolute; right: 5vw; top: 50%;
+      transform: translateY(-50%);
+      width: min(420px, 45vw); height: min(420px, 45vw);
+      border-radius: 50%;
+      border: 1px solid rgba(201,150,59,.15);
+      display: flex; align-items: center; justify-content: center;
+      animation: pulse-ring 6s ease-in-out infinite;
+    }
+    .hero-ornament::before {
+      content: ''; position: absolute; inset: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,150,59,.1);
+    }
+    .hero-ornament::after {
+      content: ''; position: absolute; inset: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,150,59,.06);
+    }
+
+    .hero-plate {
+      width: 70%; height: 70%;
+      border-radius: 50%;
+      background: 
+        radial-gradient(circle at 40% 35%, rgba(201,150,59,.25) 0%, transparent 50%),
+        radial-gradient(circle at 60% 65%, rgba(139,32,32,.3) 0%, transparent 50%),
+        linear-gradient(135deg, #1e1510 0%, #2a1a0e 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: min(5rem, 8vw);
+      box-shadow: 0 0 80px rgba(201,150,59,.12), inset 0 0 40px rgba(0,0,0,.4);
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { transform: translateY(-50%) scale(1); opacity: .8; }
+      50% { transform: translateY(-50%) scale(1.03); opacity: 1; }
+    }
+
+    .hero-tag {
+      font-size: .7rem; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.2rem;
+      opacity: 0; animation: fadeUp .8s .3s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      font-weight: 300; line-height: .95;
+      color: var(--white);
+      opacity: 0; animation: fadeUp .9s .5s forwards;
+    }
+    .hero-title em {
+      font-style: italic; color: var(--gold);
+    }
+
+    .hero-sub {
+      margin-top: 1.4rem;
+      font-size: clamp(.85rem, 2vw, 1rem);
+      color: var(--cream-dim); line-height: 1.7;
+      max-width: 420px;
+      opacity: 0; animation: fadeUp .9s .7s forwards;
+    }
+
+    .hero-urdu {
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      color: var(--gold); font-style: italic;
+      font-family: 'Cormorant Garamond', serif;
+      margin-top: .4rem;
+    }
+
+    .hero-actions {
+      margin-top: 2.5rem;
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp .9s .9s forwards;
+    }
+
+    .btn-primary {
+      font-size: .78rem; letter-spacing: .15em; text-transform: uppercase;
+      background: var(--gold); color: var(--bg);
+      padding: .9rem 2.2rem; border: none; cursor: pointer;
+      text-decoration: none; display: inline-block;
+      transition: background .3s, transform .2s;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    .btn-outline {
+      font-size: .78rem; letter-spacing: .15em; text-transform: uppercase;
+      background: transparent; color: var(--cream);
+      padding: .9rem 2.2rem;
+      border: 1px solid rgba(245,234,216,.25);
+      cursor: pointer; text-decoration: none; display: inline-block;
+      transition: border-color .3s, color .3s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      opacity: 0; animation: fadeUp .9s 1.2s forwards;
+    }
+    .hero-scroll span {
+      font-size: .6rem; letter-spacing: .25em; text-transform: uppercase; color: var(--cream-dim);
+    }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scroll-anim 2s ease-in-out infinite;
+    }
+    @keyframes scroll-anim {
+      0% { transform: scaleY(0); transform-origin: top; }
+      50% { transform: scaleY(1); transform-origin: top; }
+      51% { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 0 auto 3rem;
+      max-width: 200px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+    .divider::after { background: linear-gradient(to left, transparent, var(--gold)); }
+    .divider-icon { color: var(--gold); font-size: 1rem; }
+
+    /* ── SECTION BASE ── */
+    section { padding: 7rem 8vw; position: relative; }
+
+    .section-label {
+      font-size: .65rem; letter-spacing: .35em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: .8rem;
+      display: block;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 300; line-height: 1.1;
+      color: var(--white);
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--bg2);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6vw;
+      align-items: center;
+    }
+
+    .about-visual {
+      position: relative;
+      aspect-ratio: 4/5;
+    }
+
+    .about-img-box {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #1e1408 0%, #2d1c0e 50%, #1a0f08 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-img-box::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: 
+        radial-gradient(circle at 30% 40%, rgba(201,150,59,.2) 0%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(139,32,32,.2) 0%, transparent 50%);
+    }
+
+    .about-accent {
+      position: absolute; bottom: -1.5rem; right: -1.5rem;
+      width: 60%; height: 60%;
+      border: 1px solid rgba(201,150,59,.2);
+      z-index: 0;
+    }
+    .about-accent2 {
+      position: absolute; top: -1.5rem; left: -1.5rem;
+      width: 40%; height: 40%;
+      border: 1px solid rgba(201,150,59,.1);
+    }
+
+    .about-text { position: relative; }
+    .about-text p {
+      color: var(--cream-dim); line-height: 1.9;
+      font-size: .95rem; margin-top: 1.4rem;
+    }
+    .about-text p + p { margin-top: .8rem; }
+
+    .about-stats {
+      display: flex; gap: 2.5rem; margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .stat-item { }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem; font-weight: 300;
+      color: var(--gold); line-height: 1;
+    }
+    .stat-label {
+      font-size: .7rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--cream-dim); margin-top: .3rem;
+    }
+
+    /* ── MENU ── */
+    #menu { background: var(--bg); text-align: center; }
+    #menu .section-title { margin-bottom: .5rem; }
+    #menu > p {
+      color: var(--cream-dim); font-size: .92rem; margin-bottom: 3rem;
+    }
+
+    .menu-tabs {
+      display: flex; justify-content: center; gap: 0;
+      margin-bottom: 3.5rem; flex-wrap: wrap;
+    }
+    .tab-btn {
+      font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+      padding: .7rem 1.8rem;
+      border: 1px solid rgba(201,150,59,.2);
+      background: transparent; color: var(--cream-dim);
+      cursor: pointer; transition: all .3s;
+      margin: -1px 0 0 -1px;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--gold); color: var(--bg);
+      border-color: var(--gold);
+    }
+
+    .menu-panel { display: none; }
+    .menu-panel.active { display: block; }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1px;
+      background: rgba(201,150,59,.1);
+      text-align: left;
+    }
+
+    .menu-item {
+      background: var(--bg);
+      padding: 1.8rem;
+      transition: background .3s;
+      position: relative;
+    }
+    .menu-item:hover { background: #120e09; }
+
+    .menu-item-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 1rem;
+    }
+
+    .menu-item-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; font-weight: 400;
+      color: var(--white);
+    }
+    .menu-item-urdu {
+      font-size: .78rem; color: var(--gold); margin-top: .2rem;
+      font-style: italic;
+    }
+    .menu-item-price {
+      font-size: .9rem; color: var(--gold);
+      white-space: nowrap; font-weight: 500;
+    }
+    .menu-item-desc {
+      font-size: .82rem; color: var(--cream-dim);
+      line-height: 1.6; margin-top: .8rem;
+    }
+    .menu-badge {
+      display: inline-block;
+      font-size: .58rem; letter-spacing: .12em; text-transform: uppercase;
+      background: var(--red); color: #ffd;
+      padding: .2rem .6rem; margin-top: .7rem;
+    }
+
+    /* ── SPECIALS ── */
+    #specials {
+      background: var(--bg2);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 0;
+    }
+
+    .specials-content {
+      padding: 7rem 6vw;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+
+    .special-list { margin-top: 2.5rem; }
+    .special-item {
+      display: flex; gap: 1.5rem; padding: 1.4rem 0;
+      border-bottom: 1px solid rgba(201,150,59,.1);
+    }
+    .special-item:first-child { border-top: 1px solid rgba(201,150,59,.1); }
+    .special-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; color: rgba(201,150,59,.3);
+      line-height: 1; min-width: 2.5rem;
+    }
+    .special-info h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; color: var(--white);
+    }
+    .special-info p {
+      font-size: .82rem; color: var(--cream-dim);
+      line-height: 1.6; margin-top: .3rem;
+    }
+
+    .specials-visual {
+      background: 
+        radial-gradient(ellipse at 40% 50%, rgba(139,32,32,.3) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 30%, rgba(201,150,59,.15) 0%, transparent 50%),
+        #0f0b08;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .specials-visual::before {
+      content: 'ذائقہ';
+      position: absolute;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 10vw, 7rem);
+      color: rgba(201,150,59,.05);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* ── GALLERY ── */
+    #gallery { background: var(--bg); text-align: center; padding-bottom: 5rem; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto;
+      gap: 8px;
+      margin-top: 3rem;
+    }
+
+    .gallery-item {
+      background: #1a1008;
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem;
+      position: relative; overflow: hidden;
+      cursor: pointer;
+      transition: transform .4s;
+    }
+    .gallery-item:first-child {
+      grid-column: span 2;
+      aspect-ratio: 2/1;
+    }
+    .gallery-item::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(201,150,59,.08), rgba(139,32,32,.08));
+    }
+    .gallery-item:hover { transform: scale(.98); }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: rgba(13,10,7,.7);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .3s;
+    }
+    .gallery-overlay span {
+      font-size: .7rem; letter-spacing: .25em; text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* ── CONTACT / LOCATION ── */
+    #contact {
+      background: var(--bg2);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6vw;
+      align-items: start;
+    }
+
+    .contact-info { }
+    .contact-info p {
+      color: var(--cream-dim); font-size: .92rem;
+      line-height: 1.8; margin-top: 1rem;
+    }
+
+    .contact-details { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1.4rem; }
+    .contact-row {
+      display: flex; gap: 1.2rem; align-items: flex-start;
+    }
+    .contact-icon {
+      width: 36px; height: 36px; min-width: 36px;
+      border: 1px solid rgba(201,150,59,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem; color: var(--gold);
+    }
+    .contact-text { }
+    .contact-text strong {
+      display: block; font-size: .7rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: .2rem;
+      font-weight: 500;
+    }
+    .contact-text span, .contact-text a {
+      font-size: .88rem; color: var(--cream-dim);
+      text-decoration: none; line-height: 1.5;
+    }
+    .contact-text a:hover { color: var(--gold); }
+
+    .whatsapp-btn {
+      margin-top: 2rem;
+      display: inline-flex; align-items: center; gap: .8rem;
+      background: #25d366; color: #fff;
+      padding: .9rem 1.8rem;
+      font-size: .78rem; letter-spacing: .15em; text-transform: uppercase;
+      text-decoration: none;
+      transition: background .3s, transform .2s;
+    }
+    .whatsapp-btn:hover { background: #20bc5a; transform: translateY(-2px); }
+    .whatsapp-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    .map-box {
+      background: linear-gradient(135deg, #1a1209 0%, #221508 100%);
+      aspect-ratio: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem;
+      border: 1px solid rgba(201,150,59,.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .map-box::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,150,59,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,150,59,.05) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .map-pin { font-size: 3rem; }
+    .map-city {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; color: var(--gold); z-index: 1;
+    }
+    .map-address {
+      font-size: .8rem; color: var(--cream-dim); text-align: center;
+      max-width: 200px; line-height: 1.6; z-index: 1;
+    }
+    .map-link {
+      font-size: .7rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--gold); text-decoration: none; z-index: 1;
+      border-bottom: 1px solid rgba(201,150,59,.3);
+      padding-bottom: 2px;
+      transition: border-color .3s;
+    }
+    .map-link:hover { border-color: var(--gold); }
+
+    /* ── HOURS STRIP ── */
+    .hours-strip {
+      background: var(--gold);
+      padding: 1.5rem 8vw;
+      display: flex; align-items: center; justify-content: center;
+      gap: 4rem; flex-wrap: wrap;
+    }
+    .hours-item {
+      text-align: center;
+    }
+    .hours-label {
+      font-size: .6rem; letter-spacing: .25em; text-transform: uppercase;
+      color: rgba(13,10,7,.6);
+    }
+    .hours-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; font-weight: 600;
+      color: var(--bg);
+    }
+    .hours-sep {
+      width: 1px; height: 40px;
+      background: rgba(13,10,7,.2);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg);
+      padding: 3rem 8vw;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+      border-top: 1px solid rgba(201,150,59,.1);
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 600; color: var(--gold);
+    }
+    .footer-logo small {
+      display: block; font-size: .65rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--cream-dim);
+      font-family: 'Jost', sans-serif; font-weight: 300;
+    }
+
+    .footer-copy {
+      font-size: .75rem; color: var(--cream-dim); text-align: right;
+    }
+
+    /* ── FLOATING WHATSAPP ── */
+    .float-wa {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 200;
+      width: 52px; height: 52px;
+      background: #25d366;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,.4);
+      text-decoration: none;
+      transition: transform .3s, box-shadow .3s;
+      animation: wa-pulse 3s ease-in-out infinite;
+    }
+    .float-wa:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,.6); }
+    .float-wa svg { width: 26px; height: 26px; fill: #fff; }
+
+    @keyframes wa-pulse {
+      0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,.4); }
+      50% { box-shadow: 0 4px 30px rgba(37,211,102,.7); }
+    }
+
+    /* ── MOBILE NAV ── */
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 99;
+      background: var(--bg2);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 2rem;
+      transform: translateX(100%);
+      transition: transform .4s ease;
+    }
+    .mobile-menu.open { transform: translateX(0); }
+    .mobile-menu a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; color: var(--cream);
+      text-decoration: none;
+      transition: color .3s;
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+    .mobile-close {
+      position: absolute; top: 1.5rem; right: 2rem;
+      font-size: 1.8rem; color: var(--cream-dim);
+      cursor: pointer; background: none; border: none;
+      transition: color .3s;
+    }
+    .mobile-close:hover { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+
+      #about, #contact {
+        grid-template-columns: 1fr;
+      }
+      .about-visual { aspect-ratio: 3/2; }
+
+      #specials {
+        grid-template-columns: 1fr;
+      }
+      .specials-visual { aspect-ratio: 1.5; font-size: 5rem; }
+
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .gallery-item:first-child { grid-column: span 2; }
+
+      .hero-ornament { display: none; }
+
+      .hours-strip { gap: 1.5rem; }
+      .hours-sep { display: none; }
+
+      footer { flex-direction: column; align-items: flex-start; }
+      .footer-copy { text-align: left; }
+    }
+
+    /* ── REVEAL ANIMATIONS ── */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Zaiqa</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#specials">Specials</a></li>
+      <li><a href="#contact">Visit Us</a></li>
+    </ul>
+    <a href="https://wa.me/923001234567" class="nav-cta">Order Now</a>
+    <div class="hamburger" onclick="openMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" onclick="closeMenu()">✕</button>
+    <a href="#about" onclick="closeMenu()">About</a>
+    <a href="#menu" onclick="closeMenu()">Menu</a>
+    <a href="#specials" onclick="closeMenu()">Specials</a>
+    <a href="#contact" onclick="closeMenu()">Visit Us</a>
+    <a href="https://wa.me/923001234567" style="color: var(--gold)">Order on WhatsApp</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+
+    <div class="hero-ornament">
+      <div class="hero-plate">🍛</div>
+    </div>
+
+    <div style="position:relative; z-index:2; max-width: 600px;">
+      <span class="hero-tag">Mirpur Mathelo · Sindh</span>
+      <h1 class="hero-title">
+        Real <em>Taste,</em><br>Pure <em>Delight.</em>
+      </h1>
+      <p class="hero-sub">
+        Authentic flavors rooted in Sindhi tradition.<br>
+        <span class="hero-urdu">— ذائقہ جو دل کو چھو جائے</span>
+      </p>
+      <div class="hero-actions">
+        <a href="#menu" class="btn-primary">Explore Menu</a>
+        <a href="#contact" class="btn-outline">Find Us</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-visual reveal">
+      <div class="about-img-box">🫕</div>
+      <div class="about-accent"></div>
+      <div class="about-accent2"></div>
+    </div>
+    <div class="about-text reveal">
+      <span class="section-label">Our Story</span>
+      <h2 class="section-title">Cooked with<br><em style="font-style:italic; color:var(--gold)">Heart & Soul</em></h2>
+      <p>Zaiqa Restaurant has been serving the people of Mirpur Mathelo with honest, homestyle cooking — the kind that reminds you of your mother's kitchen and keeps you coming back.</p>
+      <p>Every dish is prepared fresh daily using traditional recipes passed down through generations, with spices sourced locally and love added in every pot.</p>
+      <div class="about-stats">
+        <div class="stat-item">
+          <div class="stat-num">10+</div>
+          <div class="stat-label">Years Serving</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">50+</div>
+          <div class="stat-label">Dishes</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Halal</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section id="menu">
+    <span class="section-label reveal">What We Serve</span>
+    <h2 class="section-title reveal">Our Menu</h2>
+    <p class="reveal">Fresh. Flavorful. Always Halal.</p>
+
+    <div class="divider reveal"><span class="divider-icon">✦</span></div>
+
+    <div class="menu-tabs reveal">
+      <button class="tab-btn active" onclick="switchTab('rice')">Rice & Biryani</button>
+      <button class="tab-btn" onclick="switchTab('karahi')">Karahi & Curries</button>
+      <button class="tab-btn" onclick="switchTab('bbq')">BBQ & Kabab</button>
+      <button class="tab-btn" onclick="switchTab('drinks')">Drinks & Desserts</button>
+    </div>
+
+    <div id="tab-rice" class="menu-panel active">
+      <div class="menu-grid">
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Sindhi Biryani</div>
+              <div class="menu-item-urdu">سندھی بریانی</div>
+            </div>
+            <div class="menu-item-price">Rs. 350</div>
+          </div>
+          <div class="menu-item-desc">Slow-cooked basmati with tender mutton, whole spices & fried onions. Topped with fresh mint & lemon.</div>
+          <span class="menu-badge">🔥 Bestseller</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Chicken Biryani</div>
+              <div class="menu-item-urdu">چکن بریانی</div>
+            </div>
+            <div class="menu-item-price">Rs. 280</div>
+          </div>
+          <div class="menu-item-desc">Aromatic basmati rice layered with marinated chicken & classic biryani masala. Served with raita.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Pulao</div>
+              <div class="menu-item-urdu">پلاؤ</div>
+            </div>
+            <div class="menu-item-price">Rs. 250</div>
+          </div>
+          <div class="menu-item-desc">Fragrant white rice cooked in rich mutton stock with whole spices. Light yet deeply satisfying.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Khichri</div>
+              <div class="menu-item-urdu">کھچڑی</div>
+            </div>
+            <div class="menu-item-price">Rs. 180</div>
+          </div>
+          <div class="menu-item-desc">Traditional Sindhi khichri — rice & lentils cooked together, served with tarka and pickle.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-karahi" class="menu-panel">
+      <div class="menu-grid">
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Mutton Karahi</div>
+              <div class="menu-item-urdu">مٹن کڑاہی</div>
+            </div>
+            <div class="menu-item-price">Rs. 950</div>
+          </div>
+          <div class="menu-item-desc">Half kg mutton cooked on high flame in iron wok with tomatoes, ginger & green chillies.</div>
+          <span class="menu-badge">🔥 Bestseller</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Chicken Karahi</div>
+              <div class="menu-item-urdu">چکن کڑاہی</div>
+            </div>
+            <div class="menu-item-price">Rs. 650</div>
+          </div>
+          <div class="menu-item-desc">Tender chicken pieces stir-fried with desi spices in traditional karahi style.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Daal Mash</div>
+              <div class="menu-item-urdu">دال ماش</div>
+            </div>
+            <div class="menu-item-price">Rs. 220</div>
+          </div>
+          <div class="menu-item-desc">Creamy white lentils slow-cooked with onion, cumin & ghee tarka. A comforting classic.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Nihari</div>
+              <div class="menu-item-urdu">نہاری</div>
+            </div>
+            <div class="menu-item-price">Rs. 420</div>
+          </div>
+          <div class="menu-item-desc">Slow-cooked overnight beef shank in rich spiced gravy. Served with naan & garnishes.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-bbq" class="menu-panel">
+      <div class="menu-grid">
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Seekh Kabab</div>
+              <div class="menu-item-urdu">سیخ کباب</div>
+            </div>
+            <div class="menu-item-price">Rs. 380</div>
+          </div>
+          <div class="menu-item-desc">Spiced minced beef on skewers, grilled over charcoal. Smoky, juicy & irresistible.</div>
+          <span class="menu-badge">🔥 Bestseller</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Tikka Boti</div>
+              <div class="menu-item-urdu">ٹکہ بوٹی</div>
+            </div>
+            <div class="menu-item-price">Rs. 450</div>
+          </div>
+          <div class="menu-item-desc">Marinated chicken cubes grilled on coal fire with traditional tikka masala.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Mutton Chops</div>
+              <div class="menu-item-urdu">مٹن چاپ</div>
+            </div>
+            <div class="menu-item-price">Rs. 550</div>
+          </div>
+          <div class="menu-item-desc">Tender lamb chops marinated and grilled to perfection. Served with fresh salad & chutney.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Sajji</div>
+              <div class="menu-item-urdu">سجی</div>
+            </div>
+            <div class="menu-item-price">Rs. 1,800</div>
+          </div>
+          <div class="menu-item-desc">Whole chicken slow-roasted on open fire in classic Balochi-Sindhi style. Serves 2–3.</div>
+          <span class="menu-badge">👥 Family Special</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-drinks" class="menu-panel">
+      <div class="menu-grid">
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Lassi (Sweet / Salty)</div>
+              <div class="menu-item-urdu">لسی</div>
+            </div>
+            <div class="menu-item-price">Rs. 120</div>
+          </div>
+          <div class="menu-item-desc">Thick and creamy desi lassi made fresh with full-fat yogurt. Best with biryani!</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Kheer</div>
+              <div class="menu-item-urdu">کھیر</div>
+            </div>
+            <div class="menu-item-price">Rs. 150</div>
+          </div>
+          <div class="menu-item-desc">Slow-cooked rice pudding with cardamom, rose water & pistachios. A perfect sweet finish.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Suji Halwa</div>
+              <div class="menu-item-urdu">سوجی حلوہ</div>
+            </div>
+            <div class="menu-item-price">Rs. 130</div>
+          </div>
+          <div class="menu-item-desc">Classic semolina halwa made with pure ghee, sugar & topped with almonds.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div>
+              <div class="menu-item-name">Doodh Patti Chai</div>
+              <div class="menu-item-urdu">دودھ پتی چائے</div>
+            </div>
+            <div class="menu-item-price">Rs. 60</div>
+          </div>
+          <div class="menu-item-desc">Strong milk tea brewed the desi way — because every great meal ends with chai.</div>
+          <span class="menu-badge">☕ Fan Favourite</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPECIALS -->
+  <section id="specials">
+    <div class="specials-content">
+      <span class="section-label reveal">Why Choose Us</span>
+      <h2 class="section-title reveal">Chef's<br><em style="font-style:italic; color:var(--gold)">Recommendations</em></h2>
+      <div class="special-list">
+        <div class="special-item reveal">
+          <div class="special-num">01</div>
+          <div class="special-info">
+            <h4>Sindhi Biryani Platter</h4>
+            <p>Our signature dish — slow-cooked, deeply spiced & served with kachumber salad and green chutney. People drive from other cities for this.</p>
+          </div>
+        </div>
+        <div class="special-item reveal">
+          <div class="special-num">02</div>
+          <div class="special-info">
+            <h4>Family BBQ Deal</h4>
+            <p>Seekh kabab + tikka + naan + raita + drinks for 4 people. Best value for family dinners & gatherings.</p>
+          </div>
+        </div>
+        <div class="special-item reveal">
+          <div class="special-num">03</div>
+          <div class="special-info">
+            <h4>Sajji (Weekend Special)</h4>
+            <p>Available Friday, Saturday & Sunday only. Pre-order recommended as it sells out fast every weekend.</p>
+          </div>
+        </div>
+        <div class="special-item reveal">
+          <div class="special-num">04</div>
+          <div class="special-info">
+            <h4>Morning Nihari</h4>
+            <p>Available Sunday mornings 8AM–12PM only. Cooked overnight. Bring your family for a true desi Sunday breakfast.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="specials-visual">🍖</div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <span class="section-label reveal">Our Kitchen</span>
+    <h2 class="section-title reveal">Fresh Every Day</h2>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item">
+        <span>🍛</span>
+        <div class="gallery-overlay"><span>Biryani</span></div>
+      </div>
+      <div class="gallery-item">
+        <span>🥘</span>
+        <div class="gallery-overlay"><span>Karahi</span></div>
+      </div>
+      <div class="gallery-item">
+        <span>🍢</span>
+        <div class="gallery-overlay"><span>BBQ</span></div>
+      </div>
+      <div class="gallery-item">
+        <span>🫕</span>
+        <div class="gallery-overlay"><span>Nihari</span></div>
+      </div>
+      <div class="gallery-item">
+        <span>🥛</span>
+        <div class="gallery-overlay"><span>Lassi</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOURS STRIP -->
+  <div class="hours-strip">
+    <div class="hours-item">
+      <div class="hours-label">Monday – Thursday</div>
+      <div class="hours-time">11:00 AM – 11:00 PM</div>
+    </div>
+    <div class="hours-sep"></div>
+    <div class="hours-item">
+      <div class="hours-label">Friday – Sunday</div>
+      <div class="hours-time">10:00 AM – 12:00 AM</div>
+    </div>
+    <div class="hours-sep"></div>
+    <div class="hours-item">
+      <div class="hours-label">Dine In / Takeaway</div>
+      <div class="hours-time">Always Welcome</div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-info reveal">
+      <span class="section-label">Come Visit</span>
+      <h2 class="section-title">Find <em style="font-style:italic; color:var(--gold)">Zaiqa</em></h2>
+      <p>Located in the heart of Mirpur Mathelo — easy to find, impossible to forget. Walk in, call ahead, or order via WhatsApp.</p>
+
+      <div class="contact-details">
+        <div class="contact-row">
+          <div class="contact-icon">📍</div>
+          <div class="contact-text">
+            <strong>Address</strong>
+            <span>Main Bazar, Near Old Post Office,<br>Mirpur Mathelo, Sindh, Pakistan</span>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">📞</div>
+          <div class="contact-text">
+            <strong>Phone</strong>
+            <a href="tel:+923001234567">0300-1234567</a>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">🕐</div>
+          <div class="contact-text">
+            <strong>Hours</strong>
+            <span>Open 7 days a week<br>11:00 AM – 11:00 PM</span>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">🚗</div>
+          <div class="contact-text">
+            <strong>Parking</strong>
+            <span>Free parking available outside the restaurant</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="https://wa.me/923001234567?text=Assalam%20o%20Alaikum!%20I%20would%20like%20to%20place%20an%20order." class="whatsapp-btn">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Order on WhatsApp
+      </a>
+    </div>
+
+    <div class="map-box reveal">
+      <div class="map-pin">📍</div>
+      <div class="map-city">Mirpur Mathelo</div>
+      <div class="map-address">Main Bazar, Near Old Post Office, Sindh, Pakistan</div>
+      <a href="https://maps.google.com/?q=Mirpur+Mathelo+Sindh+Pakistan" target="_blank" class="map-link">Open in Google Maps ↗</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">
+      Zaiqa Restaurant
+      <small>Mirpur Mathelo, Sindh</small>
+    </div>
+    <div class="footer-copy">
+      © 2024 Zaiqa Restaurant. All Rights Reserved.<br>
+      <span style="color: rgba(196,180,154,.4); font-size:.7rem;">100% Halal · Dine In · Takeaway</span>
+    </div>
+  </footer>
+
+  <!-- FLOATING WHATSAPP -->
+  <a href="https://wa.me/923001234567?text=Assalam%20o%20Alaikum!%20I%20would%20like%20to%20place%20an%20order." class="float-wa" target="_blank" title="Order on WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <script>
+    // Tab switching
+    function switchTab(id) {
+      document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + id).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Mobile menu
+    function openMenu() { document.getElementById('mobileMenu').classList.add('open'); }
+    function closeMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Nav background on scroll
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 80) {
+        nav.style.background = 'rgba(13,10,7,.97)';
+        nav.style.backdropFilter = 'blur(10px)';
+      } else {
+        nav.style.background = 'linear-gradient(to bottom, rgba(13,10,7,.95) 0%, transparent 100%)';
+      }
+    });
+  </script>
+</body>
+</html>
